@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { QrReader } from "react-qr-reader";
 import { useNavigate } from "react-router-dom";
 
+
+interface QRError {
+  name?: string;
+  message: string;
+}
+
 const ScanPage = () => {
-  const [scanResult, setScanResult] = useState(null);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [scanResult, setScanResult] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,7 +37,7 @@ const ScanPage = () => {
     checkAndRequestPermission();
   }, []);
 
-  const handleScan = (data) => {
+  const handleScan = (data: string | null) => {
     if (data) {
       try {
         const trimmedData = data.trim();
@@ -47,13 +53,14 @@ const ScanPage = () => {
             setError("Invalid URL scanned");
           }
         }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (processingError) {
         setError("Invalid QR code data");
       }
     }
   };
 
-  const handleError = (err) => {
+  const handleError = (err: QRError | null) => {
     if (err) {
       const errorMessage =
         err.name === "NotAllowedError"
