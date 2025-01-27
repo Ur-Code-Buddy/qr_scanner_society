@@ -1,31 +1,57 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const Home: React.FC = () => {
+const HomePage = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-6">
-      <div className="max-w-xl w-full bg-white shadow-lg rounded-2xl p-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center">
-          Welcome to the Home Page!
+    <div className="flex flex-col items-center justify-start min-h-screen bg-gradient-to-r from-green-50 to-blue-50 px-4">
+      {/* Logo Section */}
+      <div className="mt-12 flex justify-center w-full">
+        <img
+          src="../public/images/logo.png"
+          alt="Auro Vanam Banner"
+          className="rounded-lg shadow-lg w-1/4 md:w-1/4" // Adjust the size here
+        />
+      </div>
+  
+      {/* Header Section */}
+      <div className="text-center mb-12">
+        <h1 className="text-5xl font-bold text-gray-800 mb-4">
+          Welcome to <span className="text-green-600">Auro Vanam</span>
         </h1>
-        <p className="text-gray-600 text-lg text-center mb-6">
-          This is a basic homepage for your React application.
+        <p className="text-lg text-gray-600 max-w-2xl">
+          Auro Vanam is committed to preserving and restoring nature. Discover
+          the stories of each tree by scanning its QR code and learn about its
+          role in our ecosystem.
         </p>
-        <nav className="flex justify-center">
-          <ul className="space-y-2 sm:space-y-0 sm:flex sm:space-x-4">
-            <li>
-              <Link
-                to="/scan"
-                className="block bg-blue-600 text-white text-center py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md"
-              >
-                Go to Scan Page
-              </Link>
-            </li>
-          </ul>
-        </nav>
+      </div>
+  
+      {/* Button Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-lg">
+        <button
+          onClick={() => navigate("/admin")}
+          className="w-full px-6 py-4 bg-blue-600 text-white text-lg font-medium rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+        >
+          Go to Admin
+        </button>
+        <button
+          onClick={() => navigate("/scan")}
+          className="w-full px-6 py-4 bg-green-600 text-white text-lg font-medium rounded-lg shadow-md hover:bg-green-700 transition duration-300"
+        >
+          Scan QR Code
+        </button>
+      </div>
+  
+      {/* Decorative Section */}
+      <div className="mt-12">
+        <p className="text-sm text-gray-500 mt-4 text-center">
+          Auro Vanam is dedicated to creating a greener future. 🌱
+        </p>
       </div>
     </div>
   );
+  
 };
 
-export default Home;
+export default HomePage;
