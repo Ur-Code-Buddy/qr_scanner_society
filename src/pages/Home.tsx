@@ -6,13 +6,13 @@ const HomePage = () => {
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-gradient-to-r from-green-50 to-blue-50 px-4">
       {/* Logo Section */}
-      <div className="mt-12 flex justify-center w-full">
+      {/* <div className="mt-12 flex justify-center w-full">
         <img
           src="../public/images/logo.png"
           alt="Auro Vanam Banner"
           className="rounded-lg shadow-lg w-1/4 md:w-1/4" // Adjust the size here
         />
-      </div>
+      </div> */}
   
       {/* Header Section */}
       <div className="text-center mb-12">
