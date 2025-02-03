@@ -7,7 +7,7 @@ const UploadPage = () => {
   const navigate = useNavigate();
   const [option, setOption] = useState("googleDrive");
   const [inputValue, setInputValue] = useState("");
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -103,7 +103,12 @@ const UploadPage = () => {
           <input
             type="file"
             accept="application/pdf"
-            onChange={(e) => setFile(e.target.files[0])}
+            onChange={(e) => {
+              if (e.target.files && e.target.files.length > 0) {
+                setFile(e.target.files[0]);
+              }
+            }}
+            
             className="w-full p-3 border border-green-400 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         )}
