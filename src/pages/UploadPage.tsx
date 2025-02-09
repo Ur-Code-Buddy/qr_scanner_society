@@ -31,7 +31,7 @@ const UploadPage = () => {
         headers: { "Content-Type": "application/json" }
       });
       const response = await axios.post(
-        "http://qr_scanner_backend.05baivab.workers.dev/convert/",
+        "https://qr_scanner_backend.05baivab.workers.dev/convert/",
         JSON.stringify({ "link": link }),
         {
           headers: { "Content-Type": "application/json" }
@@ -62,7 +62,7 @@ const UploadPage = () => {
       formData.append("file", file);
 
       const response = await axios.post(
-        "http://qr_scanner_backend.05baivab.workers.dev/upload",
+        "https://qr_scanner_backend.05baivab.workers.dev/upload",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" }
