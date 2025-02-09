@@ -20,6 +20,7 @@ const UploadPage = () => {
   }, [navigate]);
 
   const handleGoogleDriveLink = async (link: string) => {
+    console.log("inside googledrive link");
     if (!link) {
       setError("Please enter a valid Google Drive link");
       return false;
@@ -31,7 +32,7 @@ const UploadPage = () => {
         headers: { "Content-Type": "application/json" }
       });
       const response = await axios.post(
-        "https://qr_scanner_backend.05baivab.workers.dev/convert/",
+        "https://qr_scanner_backend.05baivab.workers.dev/convert",
         JSON.stringify({ "link": link }),
         {
           headers: { "Content-Type": "application/json" }
@@ -47,6 +48,7 @@ const UploadPage = () => {
   };
 
   const handleFileUpload = async (file: File | null) => {
+    console.log("inside uplaod file");
     if (!file) {
       setError("Please select a file to upload");
       return false;
