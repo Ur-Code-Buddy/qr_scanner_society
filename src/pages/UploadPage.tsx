@@ -70,6 +70,12 @@ const UploadPage = () => {
           headers: { "Content-Type": "multipart/form-data" }
         }
       );
+      console.log(response.data);
+      console.log("file uploaded")
+      const link_url =  `https://qr_scanner_backend.05baivab.workers.dev/file/${response.data}`
+      
+      console.log(link_url);
+      window.location.href = link_url;
       return response;
     } catch (error) {
       console.error("Upload error:", error);
@@ -99,7 +105,7 @@ const UploadPage = () => {
         }
       }
     } catch (error) {
-      setError("An unexpected error occurred");
+      setError("An unexpected error occurred" + error);
     } finally {
       setUploading(false);
     }
@@ -116,7 +122,7 @@ const UploadPage = () => {
       <nav className="bg-white shadow-md p-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <button 
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/")}
             className="text-blue-600 hover:text-blue-800 flex items-center"
           >
             <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -210,28 +216,31 @@ const UploadPage = () => {
             </div>
           )}
 
-          {/* Submit Button */}
-          <button
-            onClick={handleSubmit}
-            disabled={uploading}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed transition duration-200"
-          >
-            {uploading ? (
-              <span className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Processing...
-              </span>
-            ) : (
-              'Upload'
-            )}
-          </button>
+          {/* Submit Button (Hidden when response is received) */}
+          {!qrCode && (
+            <button
+              onClick={handleSubmit}
+              disabled={uploading}
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed transition duration-200"
+            >
+              {uploading ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Processing...
+                </span>
+              ) : (
+                'Upload'
+              )}
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
+
 };
 
 export default UploadPage;
