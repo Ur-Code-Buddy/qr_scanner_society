@@ -73,9 +73,16 @@ const UploadPage = () => {
       console.log(response.data);
       console.log("file uploaded")
       const link_url =  `https://qr_scanner_backend.05baivab.workers.dev/file/${response.data}`
+      const response_link_qr = await axios.post(
+        "https://qr_scanner_backend.05baivab.workers.dev/convert",
+        JSON.stringify({ "link": link_url }),
+        {
+          headers: { "Content-Type": "application/json" }
+        }
+      );
       
-      console.log(link_url);
-      window.location.href = link_url;
+      console.log(response_link_qr.data);
+      setQrCode(response_link_qr.data);
       return response;
     } catch (error) {
       console.error("Upload error:", error);
@@ -101,7 +108,7 @@ const UploadPage = () => {
         if (option === "googleDrive") {
           // QR code is already set in handleGoogleDriveLink
         } else {
-          alert("File uploaded successfully!");
+          console.log("File uploaded successfully!");
         }
       }
     } catch (error) {
