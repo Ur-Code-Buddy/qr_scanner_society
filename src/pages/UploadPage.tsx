@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getCookie, deleteCookie } from "cookies-next";
+import { Download } from 'lucide-react';
 
 const UploadPage = () => {
   const navigate = useNavigate();
@@ -45,6 +46,24 @@ const UploadPage = () => {
       setError("Failed to generate QR code");
       return false;
     }
+  };
+  const handleDownloadQR = () => {
+    // Create a temporary link element
+    const link = document.createElement('a');
+    // Get the SVG content
+    const svgContent = document.querySelector('.qr-code-container svg');
+    if (!svgContent) return;
+
+    // Create a Blob from the SVG content
+    const svgBlob = new Blob([svgContent.outerHTML], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(svgBlob);
+    
+    link.href = url;
+    link.download = 'qr-code.svg';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const handleFileUpload = async (file: File | null) => {
@@ -159,7 +178,13 @@ const UploadPage = () => {
                   type="radio"
                   value="googleDrive"
                   checked={option === "googleDrive"}
-                  onChange={(e) => setOption(e.target.value as "googleDrive" | "uploadPDF")}
+                  onChange={(e) => {
+                    setOption(e.target.value as "googleDrive" | "uploadPDF");
+                    setQrCode("");
+                    setError("");
+                    setInputValue("");
+                    setFile(null);
+                  }}
                   className="form-radio text-blue-600"
                 />
                 <span className="text-gray-700">Google Drive Link</span>
@@ -169,7 +194,13 @@ const UploadPage = () => {
                   type="radio"
                   value="uploadPDF"
                   checked={option === "uploadPDF"}
-                  onChange={(e) => setOption(e.target.value as "googleDrive" | "uploadPDF")}
+                  onChange={(e) => {
+                    setOption(e.target.value as "googleDrive" | "uploadPDF");
+                    setQrCode("");
+                    setError("");
+                    setInputValue("");
+                    setFile(null);
+                  }}
                   className="form-radio text-blue-600"
                 />
                 <span className="text-gray-700">Upload PDF</span>
@@ -179,35 +210,56 @@ const UploadPage = () => {
 
           {/* Input Fields */}
           {option === "googleDrive" ? (
-            <div className="mb-6">
-              <input
-                type="text"
-                placeholder="Enter Google Drive Image Link"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
+  <div className="mb-6">
+    <input
+      type="text"
+      placeholder="Enter Google Drive Image Link"
+      value={inputValue}
+      onChange={(e) => setInputValue(e.target.value)}
+      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+    />
+  </div>
+) : (
+  <div className="mb-6">
+    <div className="flex items-center justify-center w-full">
+      <label className={`w-full flex flex-col items-center px-4 py-6 rounded-lg border-2 border-dashed cursor-pointer transition-all duration-200 ${
+        file ? 'border-green-500 bg-green-50 hover:bg-green-100' : 'border-gray-300 hover:border-blue-500'
+      }`}>
+        {file ? (
+          <>
+            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-2">
+              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
             </div>
-          ) : (
-            <div className="mb-6">
-              <div className="flex items-center justify-center w-full">
-                <label className="w-full flex flex-col items-center px-4 py-6 bg-white rounded-lg border-2 border-dashed border-gray-300 cursor-pointer hover:border-blue-500">
-                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                  </svg>
-                  <span className="mt-2 text-gray-600">
-                    {file ? file.name : "Select a PDF file"}
-                  </span>
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept="application/pdf"
-                    onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  />
-                </label>
-              </div>
-            </div>
-          )}
+            <span className="text-lg font-medium text-green-600">File Selected!</span>
+            <span className="mt-2 text-sm text-green-600">{file.name}</span>
+            <span className="mt-1 text-xs text-green-500">
+              {(file.size / (1024 * 1024)).toFixed(2)} MB
+            </span>
+            <span className="mt-3 text-xs text-green-600">Click or drag to change file</span>
+          </>
+        ) : (
+          <>
+            <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+            <span className="mt-2 text-base text-gray-600">Drop your PDF file here or</span>
+            <span className="mt-1 text-sm text-blue-500 font-medium">Browse Files</span>
+            <span className="mt-2 text-xs text-gray-500">Maximum file size: 10MB</span>
+          </>
+        )}
+        <input
+          type="file"
+          className="hidden"
+          accept="application/pdf"
+          onChange={(e) => setFile(e.target.files?.[0] || null)}
+        />
+      </label>
+    </div>
+  </div>
+)}
 
           {/* Error Message */}
           {error && (
@@ -218,12 +270,21 @@ const UploadPage = () => {
 
           {/* QR Code Display */}
           {qrCode && (
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <div className="flex justify-center" dangerouslySetInnerHTML={{ __html: qrCode }} />
+            <div className="space-y-4">
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <div className="flex justify-center qr-code-container" dangerouslySetInnerHTML={{ __html: qrCode }} />
+              </div>
+              <button
+                onClick={handleDownloadQR}
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200 flex items-center justify-center gap-2"
+              >
+                <Download size={20} />
+                Download QR Code
+              </button>
             </div>
           )}
 
-          {/* Submit Button (Hidden when response is received) */}
+          {/* Submit Button (Only shown when no QR code) */}
           {!qrCode && (
             <button
               onClick={handleSubmit}
